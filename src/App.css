@@ -1,27 +1,36 @@
+/*
 .App {
-  padding: 30px;
-  display: flex;
+    padding: 30px;
+    display: flex;
 }
 
 .App > div {
-  margin-right: 50px;
+    margin-right: 50px;
 }
 
 .error {
-  border: red 2px solid;
+    border: red 2px solid;
 }
 
 .errorMessage {
-  color: red;
+    color: red;
 }
 
 .activeFilter {
-  background: skyblue;
-  margin: 3px;
+    background: skyblue;
+    margin: 3px;
 }
-.button {
-  margin: 3px;
-}
+
+!*.button {
+    min-width: 20px;
+    min-height: 22px;
+    background: skyblue;
+    margin: 5px;
+}*!
+
 .isDone {
-  opacity: 0.5;
+    opacity: 0.5;
 }
+.IconButton {
+
+}*/
