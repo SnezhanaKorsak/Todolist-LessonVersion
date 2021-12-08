@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useCallback, useReducer} from 'react';
 import './App.css';
 import {TaskType, Todolist} from "./components/Todolist";
 import {v1} from "uuid";
@@ -26,6 +26,7 @@ export type TasksStateType = {
 }
 
 function AppWithReducers() {
+
     const todolistId1 = v1()
     const todolistId2 = v1()
 

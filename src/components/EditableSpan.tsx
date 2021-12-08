@@ -6,7 +6,8 @@ type EditableSpanType = {
     callback: (newTitle: string) => void
 }
 
-export const EditableSpan: React.FC<EditableSpanType> = ({value, callback}) => {
+export const EditableSpan: React.FC<EditableSpanType> = React.memo(({value, callback}) => {
+    console.log('EditableSpan working')
     let [editMode, setEditMode] = useState(false)
     let [title, setTitle] = useState(value)
 
@@ -27,4 +28,4 @@ export const EditableSpan: React.FC<EditableSpanType> = ({value, callback}) => {
                      size='small'/>
 
         : <span onDoubleClick={onEditMode}>{value}</span>
-}
+})

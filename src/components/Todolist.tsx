@@ -1,9 +1,10 @@
 import {Delete} from "@material-ui/icons";
-import React, {ChangeEvent} from "react";
+import React, {useCallback} from "react";
 import {FilterType} from "../App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, Checkbox, IconButton} from "@material-ui/core";
+import {Button} from "@material-ui/core";
+import {Task} from "./Task";
 
 export type TaskType = {
     id: string
@@ -24,44 +25,42 @@ type TodolistPropsType = {
     changeTitleTodolist: (todoId: string, newTitle: string) => void
 }
 
-export const Todolist: React.FC<TodolistPropsType> = ({
-                                                          tasks,
-                                                          todoId,
-                                                          title,
-                                                          filter,
-                                                          removeTask,
-                                                          changeFilter,
-                                                          addTask,
-                                                          changeStatus,
-                                                          removeTodolist,
-                                                          changeTitle,
-                                                          ...restProps
-                                                      }) => {
-    const addTaskHandler = (title: string) => {
+export const Todolist: React.FC<TodolistPropsType> = React.memo(({
+                                                                     tasks,
+                                                                     todoId,
+                                                                     title,
+                                                                     filter,
+                                                                     removeTask,
+                                                                     changeFilter,
+                                                                     addTask,
+                                                                     changeStatus,
+                                                                     removeTodolist,
+                                                                     changeTitle,
+                                                                     changeTitleTodolist,
+                                                                 }) => {
+    console.log('Todolist')
+    const addTaskHandler = useCallback((title: string) => {
         addTask(title, todoId)
-    }
+    }, [addTask, todoId])
 
-    const removeTaskHandler = (tId: string) => {
-        removeTask(tId, todoId)
-    }
 
-    const changeFilterHandler = (value: FilterType) => {
+    const changeFilterHandler = useCallback((value: FilterType) => {
         changeFilter(todoId, value)
-    }
+    }, [changeFilter, todoId])
 
-    const onChangeStatusHandler = (tId: string, e: ChangeEvent<HTMLInputElement>) => {
-        changeStatus(tId, e.currentTarget.checked, todoId)
-    }
-    const removeTodolistHandler = () => {
+
+    const removeTodolistHandler = useCallback(() => {
         removeTodolist(todoId)
-    }
-    const changeTitleTodolistHandler = (newTitle: string) => {
-        restProps.changeTitleTodolist(todoId, newTitle)
-    }
-    const onChangeTitleHandler = (newTitle: string, tId: string) => {
-        changeTitle(todoId, newTitle, tId)
-    }
+    }, [removeTodolist, todoId])
 
+    const changeTitleTodolistHandler = useCallback((newTitle: string) => {
+        changeTitleTodolist(todoId, newTitle)
+    }, [changeTitleTodolist, todoId])
+
+
+    let taskForTodolist = tasks
+    if (filter === 'Active') taskForTodolist = tasks.filter(t => !t.isDone)
+    if (filter === 'Completed') taskForTodolist = tasks.filter(t => t.isDone)
 
     return <div>
         <h3><EditableSpan value={title} callback={changeTitleTodolistHandler}/>
@@ -75,21 +74,13 @@ export const Todolist: React.FC<TodolistPropsType> = ({
         <AddItemForm callback={addTaskHandler}/>
 
         <div>
-            {tasks.map(t => {
-                return <div key={t.id} className={t.isDone ? 'isDone' : ''}>
-                    <Checkbox
-                        checked={t.isDone}
-                        color="primary"
-                        onChange={(e) => onChangeStatusHandler(t.id, e)}
-                    />
-                    <EditableSpan value={t.title} callback={(newTitle) => onChangeTitleHandler(newTitle, t.id)}/>
-                    <IconButton aria-label="delete" size="small" onClick={() => removeTaskHandler(t.id)}>
-                        <Delete fontSize="small"/>
-                    </IconButton>
-
-                </div>
-
-            })}
+            {taskForTodolist.map(t => <Task key={t.id}
+                                            task={t}
+                                            todoId={todoId}
+                                            changeStatus={changeStatus}
+                                            changeTitle={changeTitle}
+                                            removeTask={removeTask}/>
+            )}
         </div>
         <div>
             <Button variant={filter === 'All' ? 'outlined' : 'text'}
@@ -105,15 +96,8 @@ export const Todolist: React.FC<TodolistPropsType> = ({
                     onClick={() => changeFilterHandler('Completed')}
                     color={'secondary'}>Completed
             </Button>
-            {/*<button className={filter === 'All' ? 'activeFilter' : 'button'}
-                    onClick={() => changeFilterHandler('All')}>All
-            </button>
-            <button className={filter === 'Active' ? 'activeFilter' : 'button'}
-                    onClick={() => changeFilterHandler('Active')}>Active
-            </button>
-            <button className={filter === 'Completed' ? 'activeFilter' : 'button'}
-                    onClick={() => changeFilterHandler('Completed')}>Completed
-            </button>*/}
+
         </div>
     </div>
-}
+})
+

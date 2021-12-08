@@ -7,7 +7,8 @@ type AddItemFormType = {
     callback: (title: string) => void
 }
 
-export const AddItemForm: React.FC<AddItemFormType> = ({callback}) => {
+export const AddItemForm: React.FC<AddItemFormType> = React.memo(({callback}) => {
+    console.log('AddItemForm working')
     let [title, setTitle] = useState('')
     let [error, setError] = useState<string>('')
 
@@ -21,10 +22,12 @@ export const AddItemForm: React.FC<AddItemFormType> = ({callback}) => {
     }
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setTitle(e.currentTarget.value)
-        setError('')
     }
 
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if(error !== '') {
+            setError('')
+        }
         if (e.key === 'Enter') {
             addItemHandler()
         }
@@ -45,4 +48,4 @@ export const AddItemForm: React.FC<AddItemFormType> = ({callback}) => {
                 style={{minWidth: '20px', height:'40px', background: 'skyblue', margin: '0 0 5px 5px'}}
                 onClick={addItemHandler}>+</Button>
     </div>
-}
+})
