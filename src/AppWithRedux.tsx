@@ -12,6 +12,7 @@ import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "./
 import {todolistAPI} from "./api/todolists-api";
 
 
+
 export type FilterType = 'All' | 'Active' | 'Completed'
 
 export type TodolistType = {
@@ -25,10 +26,9 @@ export type TasksStateType = {
 
 function AppWithRedux() {
     console.log('App working')
-    useEffect(() => {
-        todolistAPI.getTodolists().then(res => console.log(res.data))
-        //todolistAPI.deleteTodolists('d888ea8c-0932-4ea6-b9eb-a9f2b939c21f').then(res => console.log(res.data))
-    }, [])
+    // useEffect(() => {
+    //     todolistAPI.getTodolists().then(res => console.log(res.data))
+    // }, [])
 
     const dispatch = useDispatch()
     const todolists = useSelector<AppRootStateType, TodolistType[]>(state => state.todolists)

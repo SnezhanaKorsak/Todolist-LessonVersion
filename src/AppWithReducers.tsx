@@ -1,6 +1,6 @@
-import React, {useCallback, useReducer} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./components/Todolist";
+import {Todolist} from "./components/Todolist";
 import {v1} from "uuid";
 import {AddItemForm} from "./components/AddItemForm";
 import {AppBar, Button, Container, Grid, IconButton, Paper, Typography} from "@material-ui/core";
@@ -16,16 +16,8 @@ import {
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from "./state/tasks-reducer";
 
 export type FilterType = 'All' | 'Active' | 'Completed'
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterType
-}
-export type TasksStateType = {
-    [key: string]: TaskType[]
-}
 
-function AppWithReducers() {
+export function AppWithReducers() {
 
     const todolistId1 = v1()
     const todolistId2 = v1()
@@ -125,4 +117,3 @@ function AppWithReducers() {
     );
 }
 
-export default AppWithReducers;

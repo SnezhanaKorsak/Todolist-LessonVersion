@@ -12,11 +12,7 @@ type ActionsType = ReturnType<typeof removeTodolistAC>
     | ReturnType<typeof changeTodolistTitleAC>
     | ReturnType<typeof changeTodolistFilterAC>
 
-//const initialState: TodolistType[] = []
-const initialState: initialStateType = [
-    {id: todolistId1, title: 'What to learn', filter: 'All'},
-    {id: todolistId2, title: 'What to byu', filter: 'All'},
-]
+const initialState: initialStateType = []
 
 
 export const todolistsReducer = (state = initialState, action: ActionsType): initialStateType => {
