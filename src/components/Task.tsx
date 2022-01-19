@@ -2,12 +2,13 @@ import React, {ChangeEvent, useCallback} from "react";
 import {Checkbox, IconButton} from "@material-ui/core";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@material-ui/icons";
-import {TaskType} from "./Todolist";
+import {TaskStatuses, TaskType} from "../api/tasks-api";
+
 
 type TaskPropsType = {
     task: TaskType
     todoId: string
-    changeStatus: (id: string, isDone: boolean, todoId: string) => void
+    changeStatus: (id: string, status: TaskStatuses, todoId: string) => void
     changeTitle: (todoId: string, newTitle: string, taskId: string) => void
     removeTask: (id: string, todoId: string) => void
 }
@@ -18,24 +19,25 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
                                                              changeTitle,
                                                              removeTask,
                                                          }) => {
-    const onChangeStatusHandler = useCallback((tId: string, e: ChangeEvent<HTMLInputElement>) => {
-        changeStatus(tId, e.currentTarget.checked, todoId)
-    }, [changeStatus, todoId])
+    const onChangeStatusHandler = useCallback(( e: ChangeEvent<HTMLInputElement>) => {
+        console.log(e.currentTarget.checked)
+        changeStatus(task.id, e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New, todoId)
+    }, [changeStatus, task.id])
 
     const onChangeTitleHandler = useCallback((newTitle: string, tId: string) => {
         changeTitle(todoId, newTitle, tId)
-    }, [changeTitle, todoId])
+    }, [changeTitle, task.id])
 
     const removeTaskHandler = useCallback((tId: string) => {
         removeTask(tId, todoId)
     }, [removeTask, todoId])
 
 
-    return <div key={task.id} className={task.isDone ? 'isDone' : ''}>
+    return <div key={task.id} className={task.status === TaskStatuses.Completed ? 'isDone' : ''}>
         <Checkbox
-            checked={task.isDone}
+            checked={task.status === TaskStatuses.Completed}
             color="primary"
-            onChange={(e) => onChangeStatusHandler(task.id, e)}
+            onChange={onChangeStatusHandler}
         />
         <EditableSpan value={task.title} callback={(newTitle) => onChangeTitleHandler(newTitle, task.id)}/>
         <IconButton aria-label="delete" size="small" onClick={() => removeTaskHandler(task.id)}>
