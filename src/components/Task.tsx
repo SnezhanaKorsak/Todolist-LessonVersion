@@ -9,7 +9,7 @@ type TaskPropsType = {
     task: TaskType
     todoId: string
     changeStatus: (id: string, status: TaskStatuses, todoId: string) => void
-    changeTitle: (todoId: string, newTitle: string, taskId: string) => void
+    changeTitle: (todoId: string, newTitle: string, task: TaskType) => void
     removeTask: (id: string, todoId: string) => void
 }
 export const Task: React.FC<TaskPropsType> = React.memo(({
@@ -22,11 +22,11 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
     const onChangeStatusHandler = useCallback(( e: ChangeEvent<HTMLInputElement>) => {
         console.log(e.currentTarget.checked)
         changeStatus(task.id, e.currentTarget.checked ? TaskStatuses.Completed : TaskStatuses.New, todoId)
-    }, [changeStatus, task.id])
+    }, [changeStatus, task.id, todoId])
 
-    const onChangeTitleHandler = useCallback((newTitle: string, tId: string) => {
-        changeTitle(todoId, newTitle, tId)
-    }, [changeTitle, task.id])
+    const onChangeTitleHandler = useCallback((newTitle: string, task: TaskType) => {
+        changeTitle(todoId, newTitle, task)
+    }, [changeTitle, task, todoId])
 
     const removeTaskHandler = useCallback((tId: string) => {
         removeTask(tId, todoId)
@@ -39,7 +39,8 @@ export const Task: React.FC<TaskPropsType> = React.memo(({
             color="primary"
             onChange={onChangeStatusHandler}
         />
-        <EditableSpan value={task.title} callback={(newTitle) => onChangeTitleHandler(newTitle, task.id)}/>
+        {/*<EditableSpan value={task.title} callback={(newTitle) => onChangeTitleHandler(newTitle, task.id)}/>*/}
+        <EditableSpan value={task.title} callback={(newTitle) => onChangeTitleHandler(newTitle, task)}/>
         <IconButton aria-label="delete" size="small" onClick={() => removeTaskHandler(task.id)}>
             <Delete fontSize="small"/>
         </IconButton>
