@@ -38,4 +38,3 @@ type ResponseType<D = {}> = {
     messages: string[]
     resultCode: number
 }
-//{ item: TodoDomainType }
