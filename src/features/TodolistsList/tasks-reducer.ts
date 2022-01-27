@@ -3,6 +3,7 @@ import {TasksStateType} from "../../app/App";
 import {taskAPI, TaskStatuses, TaskType, UpdateModelType} from "../../api/tasks-api";
 import {Dispatch} from "redux";
 import {AppRootStateType, ThunkType} from "../../app/store";
+import {setAppStatusAC} from "../../app/app-reducer";
 
 
 type initialStateType = TasksStateType
@@ -69,24 +70,30 @@ export const setTasksAC = (tasks: TaskType[], todolistId: string,) =>
 
 // thunk
 export const fetchTasks = (todolistId: string): ThunkType => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     taskAPI.getTasks(todolistId)
         .then(res => {
+            dispatch(setAppStatusAC('succeeded'))
             dispatch(setTasksAC(res.data.items, todolistId))
         })
 }
 
 export const addTaskTC = (todolistId: string, title: string): ThunkType => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     taskAPI.createTask(todolistId, title)
         .then(res => {
+            dispatch(setAppStatusAC('succeeded'))
             dispatch(addTaskAC(res.data.data.item))
         })
 }
 
 
 export const deleteTaskTC = (todolistId: string, taskId: string): ThunkType => (dispatch: Dispatch) => {
+    dispatch(setAppStatusAC('loading'))
     taskAPI.deleteTask(todolistId, taskId)
         .then(res => {
             if (res.data.resultCode === 0) {
+                dispatch(setAppStatusAC('succeeded'))
                 dispatch(removeTaskAC(taskId, todolistId))
             }
         })
@@ -103,9 +110,12 @@ export const updateTaskTitleTC = (todolistId: string, task: TaskType): ThunkType
         title: task.title
     }
 
+    dispatch(setAppStatusAC('loading'))
+
     taskAPI.updateTask(todolistId, task.id, model)
         .then(res => {
             if (res.data.resultCode === 0) {
+                dispatch(setAppStatusAC('succeeded'))
                 dispatch(changeTaskTitleAC(task.id, model.title, todolistId))
             }
         })
@@ -113,6 +123,7 @@ export const updateTaskTitleTC = (todolistId: string, task: TaskType): ThunkType
 
 export const updateTaskStatusTC = (todolistId: string, taskId: string, status: TaskStatuses): ThunkType =>
     (dispatch: Dispatch, getState: () => AppRootStateType) => {
+        dispatch(setAppStatusAC('loading'))
 
         const appState = getState()
         const tasksApp = appState.tasks
@@ -132,6 +143,7 @@ export const updateTaskStatusTC = (todolistId: string, taskId: string, status: T
             taskAPI.updateTask(todolistId, taskId, model)
                 .then(res => {
                     if (res.data.resultCode === 0) {
+                        dispatch(setAppStatusAC('succeeded'))
                         dispatch(changeTaskStatusAC(taskId, model.status, todolistId))
                     }
                 })

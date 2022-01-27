@@ -1,10 +1,17 @@
 import React from 'react';
 import './App.css';
-import {AppBar, Button, Container, IconButton, Typography} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import {Menu} from "@material-ui/icons";
 import {TaskType} from "../api/tasks-api";
 import {TodolistsList} from "../features/TodolistsList/TodolistsList";
+import AppBar from "@material-ui/core/AppBar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
+import {useAppSelector} from "./store";
+import {RequestStatusType} from "./app-reducer";
 
 
 export type TasksStateType = {
@@ -12,6 +19,10 @@ export type TasksStateType = {
 }
 
 function App() {
+
+    //const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+
+    const status = useAppSelector<RequestStatusType>(state => state.app.status)
 
     return (
         <div className="App">
@@ -25,7 +36,9 @@ function App() {
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
+                {status === 'loading' && <LinearProgress color="primary" />}
             </AppBar>
+
             <Container fixed>
                 <TodolistsList/>
             </Container>
