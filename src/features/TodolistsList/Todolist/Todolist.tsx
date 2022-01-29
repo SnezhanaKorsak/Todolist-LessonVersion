@@ -91,7 +91,7 @@ export const Todolist: React.FC<TodolistPropsType> = React.memo(({
             <Button variant={filter === 'All' ? 'outlined' : 'text'}
                     style={{minWidth: '20px', height: '30px', margin: '5px'}}
                     onClick={() => changeFilterHandler('All')}
-                    color={'default'}>All
+                    color={'success'}>All
             </Button>
             <Button variant={filter === 'Active' ? 'outlined' : 'text'}
                     onClick={() => changeFilterHandler('Active')}

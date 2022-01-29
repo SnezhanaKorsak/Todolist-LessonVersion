@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import {useAppSelector} from "./store";
 import {RequestStatusType} from "./app-reducer";
+import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 
 
 export type TasksStateType = {
@@ -42,6 +43,7 @@ function App() {
             <Container fixed>
                 <TodolistsList/>
             </Container>
+            <ErrorSnackbar/>
         </div>
     );
 }

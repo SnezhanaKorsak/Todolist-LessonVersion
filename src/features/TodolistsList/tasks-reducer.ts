@@ -3,7 +3,7 @@ import {TasksStateType} from "../../app/App";
 import {taskAPI, TaskStatuses, TaskType, UpdateModelType} from "../../api/tasks-api";
 import {Dispatch} from "redux";
 import {AppRootStateType, ThunkType} from "../../app/store";
-import {setAppStatusAC} from "../../app/app-reducer";
+import {setAppErrorAC, setAppStatusAC} from "../../app/app-reducer";
 
 
 type initialStateType = TasksStateType
@@ -83,7 +83,11 @@ export const addTaskTC = (todolistId: string, title: string): ThunkType => (disp
     taskAPI.createTask(todolistId, title)
         .then(res => {
             dispatch(setAppStatusAC('succeeded'))
-            dispatch(addTaskAC(res.data.data.item))
+            if(res.data.resultCode === 0) {
+                dispatch(addTaskAC(res.data.data.item))
+            } else {
+                dispatch(setAppErrorAC(res.data.messages[0]))
+            }
         })
 }
 

@@ -1,16 +1,19 @@
-import {Dispatch} from "redux";
-
-
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
 type initialStateType = typeof initialState
 
-const initialState = { status: 'idle' as RequestStatusType}
+const initialState = {
+    status: 'idle' as RequestStatusType,
+    error: null as string | null
+}
 
 export const appReducer = (state = initialState, action: AppActionsType): initialStateType => {
     switch (action.type) {
         case 'APP/SET-STATUS':
             return {...state, status: action.status}
+
+        case "APP/SET-ERROR":
+            return {...state, error: action.error}
 
         default:
             return state
@@ -21,6 +24,8 @@ export const appReducer = (state = initialState, action: AppActionsType): initia
 export const setAppStatusAC = (status: RequestStatusType) =>
     ({type: 'APP/SET-STATUS', status} as const)
 
+export const setAppErrorAC = (error: string | null) =>
+    ({type: 'APP/SET-ERROR', error} as const)
 
 // thunk
 /*export const fetchTasks = (todolistId: string): ThunkType => (dispatch: Dispatch) => {
@@ -32,5 +37,5 @@ export const setAppStatusAC = (status: RequestStatusType) =>
 
 
 // types
-export type AppActionsType = ReturnType<typeof setAppStatusAC>
+export type AppActionsType = ReturnType<typeof setAppStatusAC> | ReturnType<typeof setAppErrorAC>
 
