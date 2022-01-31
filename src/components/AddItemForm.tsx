@@ -2,12 +2,12 @@ import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {Button, TextField} from "@material-ui/core";
 
 
-
 type AddItemFormType = {
     callback: (title: string) => void
+    disabled?: boolean
 }
 
-export const AddItemForm: React.FC<AddItemFormType> = React.memo(({callback}) => {
+export const AddItemForm: React.FC<AddItemFormType> = React.memo(({callback, disabled}) => {
     console.log('AddItemForm working')
     let [title, setTitle] = useState('')
     let [error, setError] = useState<string>('')
@@ -42,10 +42,12 @@ export const AddItemForm: React.FC<AddItemFormType> = React.memo(({callback}) =>
                    label="Title"
                    helperText={error}
                    size='small'
+                   disabled={disabled}
         />
 
         <Button variant="contained"
                 style={{minWidth: '20px', height:'40px', background: 'skyblue', margin: '0 0 5px 5px'}}
-                onClick={addItemHandler}>+</Button>
+                onClick={addItemHandler}
+                disabled={disabled}>+</Button>
     </div>
 })

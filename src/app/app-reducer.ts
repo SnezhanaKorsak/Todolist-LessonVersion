@@ -1,4 +1,4 @@
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
+export type RequestStatusType = 'idle' | 'loading' | 'succeed' | 'failed'
 
 type initialStateType = typeof initialState
 

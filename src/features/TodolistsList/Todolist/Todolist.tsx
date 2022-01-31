@@ -8,6 +8,7 @@ import {TaskStatuses, TaskType} from "../../../api/tasks-api";
 import {FilterType} from "../todolist-reducer";
 import {useDispatch} from "react-redux";
 import {fetchTasks} from "../tasks-reducer";
+import {RequestStatusType} from "../../../app/app-reducer";
 
 
 type TodolistPropsType = {
@@ -15,6 +16,7 @@ type TodolistPropsType = {
     tasks: TaskType[]
     title: string
     filter: FilterType
+    entityStatus: RequestStatusType
     removeTask: (id: string, todoId: string) => void
     changeFilter: (todoId: string, value: FilterType) => void
     addTask: (taskTitle: string, todoId: string) => void
@@ -29,6 +31,7 @@ export const Todolist: React.FC<TodolistPropsType> = React.memo(({
                                                                      todoId,
                                                                      title,
                                                                      filter,
+                                                                     entityStatus,
                                                                      removeTask,
                                                                      changeFilter,
                                                                      addTask,
@@ -70,13 +73,14 @@ export const Todolist: React.FC<TodolistPropsType> = React.memo(({
     return <div>
         <h3><EditableSpan value={title} callback={changeTitleTodolistHandler}/>
             <Button variant="contained" startIcon={<Delete/>} onClick={removeTodolistHandler}
-                    style={{minWidth: '20px', height: '25px', background: 'lightgray', margin: '10px'}}>
+                    disabled={entityStatus === 'loading'}
+                    style={{minWidth: '20px', height: '25px', background: 'skyblue', margin: '10px'}}>
                 DELETE
             </Button>
 
         </h3>
 
-        <AddItemForm callback={addTaskHandler}/>
+        <AddItemForm callback={addTaskHandler} disabled={entityStatus === 'loading'}/>
 
         <div>
             {taskForTodolist.map(t => <Task key={t.id}
