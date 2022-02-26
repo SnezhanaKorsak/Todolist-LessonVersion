@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../app/store";
 import {
-    changeTodolistFilterAC,
+    changeTodolistFilter,
     createTodolistTC,
     deleteTodolistTC,
     fetchTodo,
@@ -10,7 +10,7 @@ import {
     updateTitleTodolistTC
 } from "./todolist-reducer";
 import React, {useCallback, useEffect} from "react";
-import {addTaskTC, deleteTaskTC, updateTaskStatusTC, updateTaskTitleTC} from "./tasks-reducer";
+import {addTaskTC, deleteTaskTC, updateTaskTC} from "./tasks-reducer";
 import {TaskStatuses, TaskType} from "../../api/tasks-api";
 import {Grid, Paper} from "@material-ui/core";
 import {AddItemForm} from "../../components/AddItemForm";
@@ -39,11 +39,11 @@ export const TodolistsList = () => {
     }, [dispatch])
 
     const changeStatus = useCallback((taskId: string, status: TaskStatuses, todoId: string) => {
-        dispatch(updateTaskStatusTC(todoId, taskId, status))
+        dispatch(updateTaskTC(todoId, taskId, {status}))
     }, [dispatch])
 
     const changeFilter = useCallback((todoId: string, value: FilterType) => {
-        dispatch(changeTodolistFilterAC(todoId, value))
+        dispatch(changeTodolistFilter({id: todoId, filter: value}))
     }, [dispatch])
 
     const removeTodolist = useCallback((todoId: string) => {
@@ -55,7 +55,7 @@ export const TodolistsList = () => {
     }, [dispatch])
 
     const changeTitleTask = useCallback((todoId: string, newTitle: string, task: TaskType) => {
-        dispatch(updateTaskTitleTC(todoId, task, newTitle))
+        dispatch(updateTaskTC(todoId, task.id, {newTitle}))
     }, [dispatch])
 
     const changeTitleTodolist = useCallback((todoId: string, newTitle: string) => {
