@@ -16,14 +16,17 @@ import {Grid, Paper} from "@material-ui/core";
 import {AddItemForm} from "../../components/AddItemForm";
 import {Todolist} from "./Todolist/Todolist";
 import {TasksStateType} from "../../app/App";
+import {Navigate} from "react-router-dom";
 
 export const TodolistsList = () => {
 
     const dispatch = useDispatch()
     const todolists = useSelector<AppRootStateType, TodolistDomainType[]>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
 
     useEffect(() => {
+        if(!isLoggedIn) return
         dispatch(fetchTodo())
     }, [])
 
@@ -59,6 +62,9 @@ export const TodolistsList = () => {
         dispatch(updateTitleTodolistTC(todoId, newTitle))
     }, [dispatch])
 
+    if(!isLoggedIn) {
+        return <Navigate to="login"/>
+    }
 
     return <>
         <Grid container style={{padding: "20px"}}>
