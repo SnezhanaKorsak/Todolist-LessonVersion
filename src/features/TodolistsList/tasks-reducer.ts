@@ -1,11 +1,12 @@
 import {addTodolist, clearTodolistData, removeTodolist, setTodolists} from "./todolist-reducer";
 import {TasksStateType} from "../../app/App";
-import {taskAPI, TaskStatuses, TaskType, UpdateTaskModelType} from "../../api/tasks-api";
+import {taskAPI, TaskType, UpdateTaskModelType} from "../../api/tasks-api";
 import {AppDispatch, AppRootStateType} from "../../app/store";
 import {setAppError, setAppStatus} from "../../app/app-reducer";
 import {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {TaskPriority, TaskStatuses} from "../../api/tasks-api";
 
 export enum ResponseStatusCodes {
     success = 0,
@@ -28,7 +29,7 @@ const tasksSlice = createSlice({
             const tasks = state[action.payload.task.todoListId]
             tasks.unshift(action.payload.task)
         },
-        updateTask(state, action: PayloadAction<{ taskId: string, model: UpdateTaskModelType, todolistId: string }>) {
+        updateTask(state, action: PayloadAction<{ taskId: string, model: UpdateDomainTaskModelType, todolistId: string }>) {
             const tasks = state[action.payload.todolistId]
             const index = tasks.findIndex(f => f.id === action.payload.taskId)
             tasks[index] = {...tasks[index], ...action.payload.model}
@@ -108,68 +109,7 @@ export const deleteTaskTC = (todolistId: string, taskId: string) => (dispatch: A
         })
 }
 
-
-/*export const updateTaskTitleTC = (todolistId: string, task: TaskType, newTitle: string) => (dispatch: AppDispatch) => {
-    const model: UpdateModelType = {
-        status: task.status,
-        startDate: task.startDate,
-        priority: task.priority,
-        description: task.description,
-        deadline: task.deadline,
-        title: newTitle,
-    }
-
-    dispatch(setAppStatus({status: 'loading'}))
-
-    taskAPI.updateTask(todolistId, task.id, model)
-        .then(res => {
-            if (res.data.resultCode === ResponseStatusCodes.success) {
-                dispatch(setAppStatus({status: 'succeed'}))
-                dispatch(changeTaskTitle({taskId: task.id, todolistId, title: model.title}))
-            } else {
-                handleServerAppError(res.data, dispatch)
-            }
-        })
-        .catch((error: AxiosError) => {
-            handleServerNetworkError(dispatch, error.message)
-        })
-}*/
-
-/*export const updateTaskStatusTC = (todolistId: string, taskId: string, status: TaskStatuses) =>
-    (dispatch: AppDispatch, getState: () => AppRootStateType) => {
-        dispatch(setAppStatus({status: 'loading'}))
-
-        const appState = getState()
-        const tasksApp = appState.tasks
-        const tasksForCurrentTodolist = tasksApp[todolistId]
-        const currentTask = tasksForCurrentTodolist.find(t => t.id === taskId)
-
-        if (currentTask) {
-            const model: UpdateModelType = {
-                status: status,
-                title: currentTask.title,
-                deadline: currentTask.deadline,
-                description: currentTask.description,
-                priority: currentTask.priority,
-                startDate: currentTask.startDate
-            }
-
-            taskAPI.updateTask(todolistId, taskId, model)
-                .then(res => {
-                    if (res.data.resultCode === ResponseStatusCodes.success) {
-                        dispatch(setAppStatus({status: 'loading'}))
-                        dispatch(changeTaskStatus({taskId, status: model.status, todolistId}))
-                    } else {
-                        handleServerAppError(res.data, dispatch)
-                    }
-                })
-                .catch((error: AxiosError) => {
-                    handleServerNetworkError(dispatch, error.message)
-                })
-        }
-    }*/
-
-export const updateTaskTC = (todolistId: string, taskId: string, payload: {status?: TaskStatuses, newTitle?: string}) =>
+export const updateTaskTC = (todolistId: string, taskId: string, domainModel: UpdateDomainTaskModelType) =>
     (dispatch: AppDispatch, getState: () => AppRootStateType) => {
         dispatch(setAppStatus({status: 'loading'}))
         const appState = getState()
@@ -177,27 +117,41 @@ export const updateTaskTC = (todolistId: string, taskId: string, payload: {statu
         const tasksForCurrentTodolist = tasksApp[todolistId]
         const currentTask = tasksForCurrentTodolist.find(t => t.id === taskId)
 
-        if (currentTask) {
-            const model: UpdateTaskModelType = {
-                status: (payload.status || payload.status === TaskStatuses.New) ? payload.status : currentTask.status,
-                title: payload.newTitle ? payload.newTitle : currentTask.title,
-                deadline: currentTask.deadline,
-                description: currentTask.description,
-                priority: currentTask.priority,
-                startDate: currentTask.startDate
-            }
-
-            taskAPI.updateTask(todolistId, taskId, model)
-                .then(res => {
-                    if (res.data.resultCode === ResponseStatusCodes.success) {
-                        dispatch(setAppStatus({status: 'succeed'}))
-                        dispatch(updateTask({taskId, model, todolistId}))
-                    } else {
-                        handleServerAppError(res.data, dispatch)
-                    }
-                })
-                .catch((error: AxiosError) => {
-                    handleServerNetworkError(dispatch, error.message)
-                })
+        if (!currentTask) {
+            console.warn('task not found in the state')
+            return
         }
+
+        const apiModel: UpdateTaskModelType = {
+            deadline: currentTask.deadline,
+            description: currentTask.description,
+            priority: currentTask.priority,
+            startDate: currentTask.startDate,
+            title: currentTask.title,
+            status: currentTask.status,
+            ...domainModel
+        }
+
+        taskAPI.updateTask(todolistId, taskId, apiModel)
+            .then(res => {
+                if (res.data.resultCode === ResponseStatusCodes.success) {
+                    dispatch(setAppStatus({status: 'succeed'}))
+                    dispatch(updateTask({taskId, model: domainModel, todolistId}))
+                } else {
+                    handleServerAppError(res.data, dispatch)
+                }
+            })
+            .catch((error: AxiosError) => {
+                handleServerNetworkError(dispatch, error.message)
+            })
     }
+
+// types
+export type UpdateDomainTaskModelType = {
+    title?: string
+    description?: string
+    status?: TaskStatuses
+    priority?: TaskPriority
+    startDate?: string
+    deadline?: string
+}
