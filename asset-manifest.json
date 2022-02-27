@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/Todolist-LessonVersion/static/css/main.a5eb101c.chunk.css",
+    "main.js": "/Todolist-LessonVersion/static/js/main.cbb1c6b9.chunk.js",
+    "main.js.map": "/Todolist-LessonVersion/static/js/main.cbb1c6b9.chunk.js.map",
+    "runtime-main.js": "/Todolist-LessonVersion/static/js/runtime-main.f5bf8888.js",
+    "runtime-main.js.map": "/Todolist-LessonVersion/static/js/runtime-main.f5bf8888.js.map",
+    "static/js/2.e2e9698a.chunk.js": "/Todolist-LessonVersion/static/js/2.e2e9698a.chunk.js",
+    "static/js/2.e2e9698a.chunk.js.map": "/Todolist-LessonVersion/static/js/2.e2e9698a.chunk.js.map",
+    "index.html": "/Todolist-LessonVersion/index.html",
+    "precache-manifest.345836d3f83b812b3cd6cce38c2bb209.js": "/Todolist-LessonVersion/precache-manifest.345836d3f83b812b3cd6cce38c2bb209.js",
+    "service-worker.js": "/Todolist-LessonVersion/service-worker.js",
+    "static/css/main.a5eb101c.chunk.css.map": "/Todolist-LessonVersion/static/css/main.a5eb101c.chunk.css.map",
+    "static/js/2.e2e9698a.chunk.js.LICENSE.txt": "/Todolist-LessonVersion/static/js/2.e2e9698a.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f5bf8888.js",
+    "static/js/2.e2e9698a.chunk.js",
+    "static/css/main.a5eb101c.chunk.css",
+    "static/js/main.cbb1c6b9.chunk.js"
+  ]
+}
