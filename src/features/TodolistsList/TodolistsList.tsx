@@ -63,7 +63,7 @@ export const TodolistsList = () => {
     }, [dispatch])
 
     if(!isLoggedIn) {
-        return <Navigate to="login"/>
+        return <Navigate to="/login"/>
     }
 
     return <>
